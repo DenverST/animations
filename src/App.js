@@ -1,25 +1,77 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect} from 'react';
+
+import { bounce, zoomInRight, zoomOutLeft } from 'react-animations';
+import Radium, {StyleRoot} from 'radium';
+
+import Car from './Car.js'
+import { ReactComponent as Soccerball } from './images/soccerball.svg';
+
+const styles = {
+  bounce: {
+    animation: 'x 1s',
+    animationName: Radium.keyframes(bounce, 'bounce')
+  },
+  zoomInRight: {
+    animation: 'x 1s',
+    animationName: Radium.keyframes(zoomInRight, 'zoomInRight')
+  },
+  zoomOutLeft: {
+    animation: 'x 1s',
+    animationName: Radium.keyframes(zoomOutLeft, 'zoomOutLeft')
+  },
+  container: {
+    height: '100vh',
+  },
+  animationContainer: {
+    height: '95vh'
+  }
+}
 
 function App() {
+
+  const [carAnimation, setCarAnimation] = useState('zoomInRight');
+
+  useEffect(() => {
+    animateCar()  
+  });
+
+  const sleep = (time) => {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  // const animateCar = () => {
+  //     sleep(1000).then(() => {
+  //         setCarAnimation('zoomOutLeft')
+  //         sleep(1000).then(() => {
+  //           setCarAnimation('zoomInRight') 
+  //           animateCar()
+  //         })
+  //       })
+  // }
+
+  const animateCar = () => {
+    sleep(1000).then(() => {
+      if (carAnimation === 'zoomOutLeft') {
+        setCarAnimation('zoomInRight')
+      } else {
+        setCarAnimation('zoomOutLeft')
+      }
+    })
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <StyleRoot>
+        <div style={styles.container}>
+          <div style={styles.animationContainer}>
+            <Car
+              duration={1}
+              animation={carAnimation}
+              styles={styles}
+            />
+          </div>
+          <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"title="Flaticon">www.flaticon.com</a></div>
+        </div>
+      </StyleRoot>
   );
 }
 
